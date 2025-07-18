@@ -27,9 +27,26 @@ export class ContactsService extends PrismaClient implements OnModuleInit {
       };
     }
 
-    const newContact = await this.eContact.create({
-      data: createContactDto,
+    // 1. Buscar el último código existente (ordenado de mayor a menor)
+    const lastContact = await this.eContact.findFirst({
+      orderBy: { code: 'desc' },
+      where: { branchId: createContactDto.branchId },
     });
+
+    // 2. Calcular el nuevo número incremental
+    const nextNumber = lastContact ? parseInt(lastContact.code, 10) + 1 : 1;
+
+    // 3. Formatearlo como string con ceros (ej: '0001', '0002', ...)
+    const generatedCode = nextNumber.toString().padStart(4, '0');
+
+    // 4. Crear el contacto incluyendo el code generado
+    const newContact = await this.eContact.create({
+      data: {
+        ...createContactDto,
+        code: generatedCode,
+      },
+    });
+
     return newContact;
   }
 
@@ -58,10 +75,11 @@ export class ContactsService extends PrismaClient implements OnModuleInit {
   }
 
   async searchContact(paginationDto: PaginationDto) {
-    const { branchId, search } = paginationDto;
+    const { branchId, search, type } = paginationDto;
 
     const where: any = {
       branchId,
+      type,
       available: true,
     };
 
