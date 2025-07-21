@@ -39,7 +39,7 @@ enum DocumentType {
 model EContact {
   id             String        @id @default(uuid())
   branchId       String
-  code           String        @unique
+  code           String       
   name           String
   businessName   String?
   documentType   DocumentType  // enum: DNI, CUIL, CUIT

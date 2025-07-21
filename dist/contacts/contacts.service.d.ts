@@ -7,7 +7,6 @@ export declare class ContactsService extends PrismaClient implements OnModuleIni
     onModuleInit(): void;
     create(createContactDto: CreateContactDto): Promise<{
         branchId: string;
-        code: string;
         name: string;
         businessName: string | null;
         ivaCondition: import(".prisma/client").$Enums.IvaCondition;
@@ -19,6 +18,7 @@ export declare class ContactsService extends PrismaClient implements OnModuleIni
         address: string | null;
         type: import(".prisma/client").$Enums.ContactType;
         id: string;
+        code: string;
         createdAt: Date;
         updatedAt: Date;
     } | {
@@ -35,7 +35,6 @@ export declare class ContactsService extends PrismaClient implements OnModuleIni
     }>;
     findOneById(id: string): Promise<{
         branchId: string;
-        code: string;
         name: string;
         businessName: string | null;
         ivaCondition: import(".prisma/client").$Enums.IvaCondition;
@@ -47,6 +46,7 @@ export declare class ContactsService extends PrismaClient implements OnModuleIni
         address: string | null;
         type: import(".prisma/client").$Enums.ContactType;
         id: string;
+        code: string;
         createdAt: Date;
         updatedAt: Date;
     } | {

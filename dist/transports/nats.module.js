@@ -9,7 +9,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.NatsModule = void 0;
 const common_1 = require("@nestjs/common");
 const microservices_1 = require("@nestjs/microservices");
-const config_1 = require("../../config");
+const config_1 = require("../config");
 let NatsModule = class NatsModule {
 };
 exports.NatsModule = NatsModule;

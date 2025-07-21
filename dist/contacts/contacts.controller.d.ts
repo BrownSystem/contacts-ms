@@ -6,7 +6,6 @@ export declare class ContactsController {
     constructor(contactsService: ContactsService);
     create(createContactDto: CreateContactDto): Promise<{
         branchId: string;
-        code: string;
         name: string;
         businessName: string | null;
         ivaCondition: import(".prisma/client").$Enums.IvaCondition;
@@ -18,6 +17,7 @@ export declare class ContactsController {
         address: string | null;
         type: import(".prisma/client").$Enums.ContactType;
         id: string;
+        code: string;
         createdAt: Date;
         updatedAt: Date;
     } | {
@@ -34,7 +34,6 @@ export declare class ContactsController {
     }>;
     findOneById(id: string): Promise<{
         branchId: string;
-        code: string;
         name: string;
         businessName: string | null;
         ivaCondition: import(".prisma/client").$Enums.IvaCondition;
@@ -46,6 +45,7 @@ export declare class ContactsController {
         address: string | null;
         type: import(".prisma/client").$Enums.ContactType;
         id: string;
+        code: string;
         createdAt: Date;
         updatedAt: Date;
     } | {

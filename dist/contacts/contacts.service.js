@@ -27,8 +27,17 @@ let ContactsService = ContactsService_1 = class ContactsService extends client_1
                 status: common_1.HttpStatus.METHOD_NOT_ALLOWED,
             };
         }
+        const lastContact = await this.eContact.findFirst({
+            orderBy: { code: 'desc' },
+            where: { branchId: createContactDto.branchId },
+        });
+        const nextNumber = lastContact ? parseInt(lastContact.code, 10) + 1 : 1;
+        const generatedCode = nextNumber.toString().padStart(4, '0');
         const newContact = await this.eContact.create({
-            data: createContactDto,
+            data: {
+                ...createContactDto,
+                code: generatedCode,
+            },
         });
         return newContact;
     }
@@ -53,9 +62,10 @@ let ContactsService = ContactsService_1 = class ContactsService extends client_1
         return contact;
     }
     async searchContact(paginationDto) {
-        const { branchId, search } = paginationDto;
+        const { branchId, search, type } = paginationDto;
         const where = {
             branchId,
+            type,
             available: true,
         };
         if (search) {
