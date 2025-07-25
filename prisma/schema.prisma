@@ -38,17 +38,17 @@ enum DocumentType {
 
 model EContact {
   id             String        @id @default(uuid())
-  branchId       String
-  code           String       
-  name           String
+  branchId       String?
+  code           String      
+  name           String?
   businessName   String?
-  documentType   DocumentType  // enum: DNI, CUIL, CUIT
-  documentNumber String        @unique // <- nuevo nombre aquí
-  ivaCondition   IvaCondition
+  documentType   DocumentType?  // enum: DNI, CUIL, CUIT
+  documentNumber String?        @unique // <- nuevo nombre aquí
+  ivaCondition   IvaCondition?
   phone          String?
   email          String?
   address        String?
-  type           ContactType
+  type           ContactType?
   available      Boolean       @default(true)
   createdAt      DateTime      @default(now())
   updatedAt      DateTime      @updatedAt

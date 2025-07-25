@@ -1,6 +1,5 @@
 import { HttpStatus, Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { CreateContactDto } from './dto/create-contact.dto';
-import { UpdateContactDto } from './dto/update-contact.dto';
 import { EContact, PrismaClient } from '@prisma/client';
 import { PaginateWithMeta } from './dto/pagination.helper';
 import { PaginationDto } from './dto/pagination.dto';
@@ -9,22 +8,32 @@ import { PaginationDto } from './dto/pagination.dto';
 export class ContactsService extends PrismaClient implements OnModuleInit {
   private readonly logger = new Logger(ContactsService.name);
 
+  private omitEmptyFields<T extends object>(dto: T): Partial<T> {
+    return Object.fromEntries(
+      Object.entries(dto).filter(
+        ([_, v]) => v !== '' && v !== null && v !== undefined,
+      ),
+    ) as Partial<T>;
+  }
+
   onModuleInit() {
     void this.$connect();
     this.logger.log('Database connected');
   }
 
   async create(createContactDto: CreateContactDto) {
-    const existingContact = await this.eContact.findFirst({
-      where: { documentNumber: createContactDto.documentNumber },
-    });
+    if (createContactDto.documentNumber?.trim()) {
+      const existingContact = await this.eContact.findFirst({
+        where: { documentNumber: createContactDto.documentNumber },
+      });
 
-    if (existingContact) {
-      return {
-        message:
-          '[CONTACT_CREATE] Contact with this CUIT/CUIL/DNI already exists',
-        status: HttpStatus.METHOD_NOT_ALLOWED,
-      };
+      if (existingContact) {
+        return {
+          message:
+            '[CONTACT_CREATE] Contact with this CUIT/CUIL/DNI already exists',
+          status: HttpStatus.METHOD_NOT_ALLOWED,
+        };
+      }
     }
 
     // 1. Buscar el último código existente (ordenado de mayor a menor)
@@ -34,15 +43,17 @@ export class ContactsService extends PrismaClient implements OnModuleInit {
     });
 
     // 2. Calcular el nuevo número incremental
-    const nextNumber = lastContact ? parseInt(lastContact.code, 10) + 1 : 1;
+    const nextNumber = lastContact ? parseInt(lastContact?.code, 10) + 1 : 1;
 
     // 3. Formatearlo como string con ceros (ej: '0001', '0002', ...)
     const generatedCode = nextNumber.toString().padStart(4, '0');
 
     // 4. Crear el contacto incluyendo el code generado
+    const cleanDto = this.omitEmptyFields(createContactDto);
+
     const newContact = await this.eContact.create({
       data: {
-        ...createContactDto,
+        ...cleanDto,
         code: generatedCode,
       },
     });

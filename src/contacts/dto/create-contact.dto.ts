@@ -11,29 +11,31 @@ import {
 
 export class CreateContactDto {
   @IsString()
-  @IsNotEmpty()
-  branchId: string;
+  @IsOptional()
+  branchId?: string;
 
   @IsString()
-  @IsNotEmpty()
-  name: string;
+  @IsOptional()
+  name?: string;
 
   @IsString()
   @IsOptional()
   businessName?: string;
 
   @IsEnum(IvaCondition)
-  ivaCondition: IvaCondition;
+  @IsOptional()
+  ivaCondition?: IvaCondition;
 
   @IsEnum(DocumentType)
-  documentType: DocumentType;
+  @IsOptional()
+  documentType?: DocumentType;
 
   @IsString()
-  @IsNotEmpty()
   @Matches(/^(\d{2}-\d{8}-\d|\d{7,8})$/, {
     message: 'Debe ser un CUIT/CUIL (XX-XXXXXXXX-X) o DNI (7 u 8 dígitos)',
   })
-  documentNumber: string;
+  @IsOptional()
+  documentNumber?: string;
 
   @IsBoolean()
   @IsOptional()
@@ -52,5 +54,6 @@ export class CreateContactDto {
   address?: string;
 
   @IsEnum(ContactType)
-  type: ContactType;
+  @IsOptional()
+  type?: ContactType;
 }
